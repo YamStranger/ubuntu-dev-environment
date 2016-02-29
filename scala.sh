@@ -11,12 +11,22 @@ else
     export SCALA_VERSION=$1
 fi
 
-mkdir -p ~/dev/apps/
-cd ~/dev/apps/
-wget http://downloads.lightbend.com/scala/$SCALA_VERSION/scala-$SCALA_VERSION.tgz
-tar zxvf scala-$SCALA_VERSION.tgz
+
+if ! grep -q "#scala" ~/.bashrc;
+then
+    mkdir -p ~/dev/apps/
+    cd ~/dev/apps/
+    rm -rf scala-$SCALA_VERSION/
+    wget -q --show-progress  http://downloads.lightbend.com/scala/$SCALA_VERSION/scala-$SCALA_VERSION.tgz
+    tar zxvf scala-$SCALA_VERSION.tgz
 echo '
-#scala all environment variables from
-export SCALA_HOME='$pwd'scala-'$SCALA_VERSION'
+#scala all environment variables. https://github.com/YamStranger/ubuntu-dev-environment
+export SCALA_HOME='$(pwd)'/scala-'$SCALA_VERSION'
 export PATH=$SCALA_HOME/bin:$PATH' >>~/.bashrc
-rm scala-$SCALA_VERSION.tgz
+    rm scala-$SCALA_VERSION.tgz
+    echo "to test installation please open new terminal and execute \"scala -version\""
+else
+    echo "according to (~/.bashrc) scala is already installed, please remove it"
+fi
+
+
